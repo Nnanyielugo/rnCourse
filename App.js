@@ -3,11 +3,14 @@ import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 
 import PlaceInput from './src/components/PlaceInput/PlaceInput';
 import PlaceList from './src/components/PlaceList/PlaceList';
+import PlaceDetail from './src/components/PlaceDetail/PlaceDetail';
+import PlaceImage from './src/assets/lion.jpg'
 
 export default class App extends React.Component {
   state = {
     placeName: '',
-    places: []
+    places: [],
+    selectedPlace: null
   }
 
   handlePlacesChange = prop => {
@@ -16,11 +19,11 @@ export default class App extends React.Component {
     })
   }
 
-  handleItemDelete = index => {
+  handlePlaceSelected = key => {
     this.setState(prevState => {
       return {
-        places: prevState.places.filter((place, i) => {
-          return i !== index;
+        selectedPlace: prevState.places.find(place => {
+          return place.key === key;
         })
       }
     })
@@ -35,15 +38,45 @@ export default class App extends React.Component {
     if (placeName.trim() === '') return;
     this.setState(prevState => {
       return {
-        places: prevState.places.concat(prevState.placeName),
-        placeName: ''
+        places: prevState.places.concat({
+          key: Math.random(),
+          name: placeName,
+          image: PlaceImage
+          // if imageLink
+          // image: {
+          //   uri: 'imageLink'
+          // }
+        }),
+        // placeName: ''
       }
     })
   }
+
+  handlePlaceDelete = () => {
+    this.setState(prevState => {
+      return {
+        places: prevState.places.filter(place => {
+          return place.key !== prevState.selectedPlace.key;
+        }),
+        selectedPlace: null
+      }
+    })
+  }
+
+  handleModalClose = () => {
+    this.setState({
+      selectedPlace: null
+    })
+  }
   render() {
-    const { places, placeName } = this.state;
+    const { places, placeName, selectedPlace } = this.state;
     return (
       <View style={styles.container}>
+        <PlaceDetail 
+          selectedPlace={selectedPlace}
+          onItemDeleted={this.handlePlaceDelete}
+          onModalClose={this.handleModalClose}
+        />
         <PlaceInput
           value={placeName}
           onChangeText={this.handlePlacesChange}
@@ -52,7 +85,7 @@ export default class App extends React.Component {
         <PlaceList 
           places={places}
           onPress={this.handleItemPress}
-          onItemDeleted={this.handleItemDelete}
+          onItemSelected={this.handlePlaceSelected}
         />
       </View>
     );
