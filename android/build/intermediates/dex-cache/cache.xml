@@ -165,6 +165,15 @@
     </item>
     <item
         is-multidex="false"
+        jar="/home/nnanyielugo/React_Native/course/android/app/build/intermediates/exploded-aar/course/react-native-vector-icons/unspecified/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="5e8ab25e82aeac62f0f98ad05caaa49a5821c499">
+        <dex dex="/home/nnanyielugo/React_Native/course/android/app/build/intermediates/pre-dexed/debug/course-react-native-vector-icons-unspecified_37e311e5f1d3be3bac44b9f63d1398289147dcc3.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/home/nnanyielugo/React_Native/course/android/app/build/intermediates/exploded-aar/com.facebook.fbui.textlayoutbuilder/textlayoutbuilder/1.0.0/jars/classes.jar"
         jumboMode="false"
         optimize="true"
