@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/home/nnanyielugo/React_Native/course/android/app/build/intermediates/res/merged/debug/menu/stub.xml",
+        "source": "/home/nnanyielugo/React_Native/course/android/app/build/intermediates/exploded-aar/course/react-native-navigation/unspecified/res/menu/stub.xml"
+    },
+    {
+        "merged": "/home/nnanyielugo/React_Native/course/android/app/build/intermediates/res/merged/debug/menu/search_item.xml",
+        "source": "/home/nnanyielugo/React_Native/course/android/app/build/intermediates/exploded-aar/course/react-native-navigation/unspecified/res/menu/search_item.xml"
+    }
+]
