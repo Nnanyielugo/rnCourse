@@ -10,7 +10,8 @@ const startTabs = () => {
   // the icons are only requested when the promise resolves
   Promise.all([
     Icon.getImageSource("md-map", 30),
-    Icon.getImageSource("ios-share-alt", 30)
+    Icon.getImageSource("ios-share-alt", 30),
+    Icon.getImageSource("ios-menu", 30)
   ]).then(sources => {
     Navigation.startTabBasedApp({
       tabs: [
@@ -18,15 +19,38 @@ const startTabs = () => {
           screen: "awesome-places.FindPlaceScreen",
           label: "Find Place",
           title: 'FInd Place',
-          icon: sources[0]
+          icon: sources[0],
+          navigatorButtons: {
+            leftButtons: [
+              {
+                icon: sources[2],
+                title: "Menu",
+                id: "sideDrawerToggle"
+              }
+            ]
+          }
         },
         {
           screen: "awesome-places.SharePlaceScreen",
           label: "Share Place",
           title: 'Share Place',
-          icon: sources[1]
+          icon: sources[1],
+          navigatorButtons: {
+            leftButtons: [
+              {
+                icon: sources[2],
+                title: "Menu",
+                id: "sideDrawerToggle"
+              }
+            ]
+          }
         }
-      ]
+      ],
+      drawer: {
+        left: {
+          screen: "awesome-places.SideDrawer"
+        }
+      }
     });
   })
   
