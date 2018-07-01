@@ -5,6 +5,10 @@ import { connect } from 'react-redux';
 import PlaceList from '../../components/PlaceList/PlaceList';
 
 class FindPlace extends Component {
+  static navigatorStyle = {
+    navBarButtonColor: "orange"
+  }
+  
   constructor(props) {
     // execute the parent constructor
     super(props)
@@ -20,7 +24,7 @@ class FindPlace extends Component {
       }
     }
   }
-  
+
   itemSelectedHandler = key => {
     const { navigator, places } = this.props;
     const selPlace = places.find(place => {
