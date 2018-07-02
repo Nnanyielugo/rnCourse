@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { connect } from 'react-redux';
 
 import PlaceList from '../../components/PlaceList/PlaceList';
@@ -8,11 +8,17 @@ class FindPlace extends Component {
   static navigatorStyle = {
     navBarButtonColor: "orange"
   }
-  
+
   constructor(props) {
     // execute the parent constructor
     super(props)
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent)
+    this.state = {
+      placesLoaded: false,
+      // add the argument to initialize the constructor with.
+      // in this case, it's starting at scale 1, and at opacity 1
+      removeAnim: new Animated.Value(1)
+    }
   }
 
   onNavigatorEvent = event => {
@@ -38,26 +44,71 @@ class FindPlace extends Component {
       }
     })
   }
+
+  placesSearchHandler = () => {
+   Animated.timing(this.state.removeAnim, {
+     toValue: 0,
+     duration: 500,
+     useNativeDriver: true
+   }).start()
+  }
   render() {
     const { places } = this.props;
-    return (
-      <View>
+    let content = (
+      <Animated.View
+        style={{
+          opacity: this.state.removeAnim,
+          transform: [
+            {
+              // using just this.state.removeAnim would shrink the button, then make it transparent
+              scale: this.state.removeAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [12, 1]
+              })
+            }
+          ]
+        }}
+      >
+        <TouchableOpacity onPress={this.placesSearchHandler}>
+          <View style={styles.searchButton}>
+            <Text style={styles.searchButtonText}>Find Places</Text>
+          </View>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+    if (this.state.placesLoaded === true) {
+      content = (
         <PlaceList 
           places={places}
           onItemSelected={this.itemSelectedHandler}
         />
+      )
+    }
+    return (
+      <View style={this.state.placesLoaded === true ? null : styles.buttonContainer}>
+        {content}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  buttonContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2c3e50',
+    justifyContent: "center",
+    alignItems: "center"
   },
+  searchButton: {
+    borderColor: "orange",
+    borderWidth: 3,
+    borderRadius: 50,
+    padding: 20
+  },
+  searchButtonText: {
+    color: "orange",
+    fontWeight: "bold",
+    fontSize: 26
+  }
 });
 
 const mapStateToProps = state => {
