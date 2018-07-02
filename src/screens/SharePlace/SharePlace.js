@@ -8,6 +8,7 @@ import HeadingText from '../../components/UI/Text/HeadingText';
 import PlaceInput from '../../components/PlaceInput/PlaceInput';
 import PickImage from '../../components/PickImage/PickImage';
 import PickLocation from '../../components/PickLocation/PickLocation';
+import validate from '../../utility/validation';
 
 class SharePlace extends Component {
   static navigatorStyle = {
@@ -19,7 +20,24 @@ class SharePlace extends Component {
     super(props)
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent)
     this.state = {
-      placeName: ''
+      controls: {
+        placeName: {
+          value: "",
+          valid: false,
+          touched: false,
+          validationRules: {
+            notEmpty: true
+          },
+        },
+        location: {
+          value: null,
+          valid: false
+        },
+        image: {
+          value: null,
+          valid: false
+        }
+      }
     }
   }
 
@@ -34,19 +52,65 @@ class SharePlace extends Component {
   }
 
   placeChangedHandler = prop => {
-    this.setState({
-      placeName: prop
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          placeName: {
+            ...prevState.controls.placeName,
+            value: prop,
+            valid: validate(prop, prevState.controls.placeName.validationRules)
+          }
+        }
+      }
+    })
+  }
+
+  locationPickedHandler = location => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          location: {
+            value: location,
+            valid: true
+          }
+        }
+      }
+    })
+  }
+
+  imagePickedHandler = image => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          image: {
+            value: image,
+            valid: true
+          }
+        }
+      }
     })
   }
   
   placeAddedHandler = () => {
-    const { placeName } = this.state;
-    if (placeName.trim() !== "") {
-      this.props.onAddPlace(placeName);
-      this.setState({
-        placeName: ""
-      })
-    }
+    this.props.onAddPlace(
+      this.state.controls.placeName.value, 
+      this.state.controls.location.value,
+      this.state.controls.image.value
+    );
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          placeName: {
+            ...prevState.controls.placeName,
+            value: ''
+          }
+        }
+      }
+    })    
   }
 
   render() {
@@ -56,16 +120,21 @@ class SharePlace extends Component {
           <MainText>
             <HeadingText>Share a place with us!</HeadingText>
           </MainText>
-          <PickImage />
-          <PickLocation />
+          <PickImage onImagePicked={this.imagePickedHandler} />
+          <PickLocation onLocationPick={this.locationPickedHandler}  />
           <PlaceInput 
-            placeName={this.state.placeName}
+            placeName={this.state.controls.placeName.value}
             onChangeText={this.placeChangedHandler}
           />
           <View style={styles.button}>
             <Button 
               title="Share the place!"
-              onPress={this.placeAddedHandler} 
+              onPress={this.placeAddedHandler}
+              disabled={
+                !this.state.controls.placeName.valid || 
+                !this.state.controls.location.valid ||
+                !this.state.controls.image.valid
+              }
             />            
           </View>
         </View>
@@ -97,7 +166,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddPlace: (placeName) => dispatch(addPlace(placeName))
+    onAddPlace: (placeName, location, image) => dispatch(addPlace(placeName, location, image))
   }
 }
 

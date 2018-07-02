@@ -17,6 +17,7 @@ class FindPlace extends Component {
       placesLoaded: false,
       // add the argument to initialize the constructor with.
       // in this case, it's starting at scale 1, and at opacity 1
+      placesAnim: new Animated.Value(0),
       removeAnim: new Animated.Value(1)
     }
   }
@@ -45,13 +46,27 @@ class FindPlace extends Component {
     })
   }
 
+  placesLoadedHandler = () => {
+    Animated.timing(this.state.placesAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true
+    }).start();
+  };
+
   placesSearchHandler = () => {
-   Animated.timing(this.state.removeAnim, {
-     toValue: 0,
-     duration: 500,
-     useNativeDriver: true
-   }).start()
-  }
+    Animated.timing(this.state.removeAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true
+    }).start(() => {
+      this.setState({
+        placesLoaded: true
+      });
+      this.placesLoadedHandler();
+    });
+  };
+
   render() {
     const { places } = this.props;
     let content = (
