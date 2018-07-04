@@ -55,7 +55,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCh_trCf5nFPf8LjoXSjO3rWJhwGQQaYRo" />
+            android:value="AIzaSyAxXsoPOC1C4GMCkQ2Wps000oCUhgiR7g0" />
 
         <activity
             android:name="com.reactnativenavigation.controllers.NavigationActivity"
