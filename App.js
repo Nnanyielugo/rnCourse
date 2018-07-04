@@ -42,11 +42,14 @@ Navigation.registerComponent(
 
 Navigation.registerComponent(
   "awesome-places.SideDrawer", 
-  () => SideDrawer
+  () => SideDrawer,
+  store,
+  Provider
 );
 
 // Start an App
-Navigation.startSingleScreenApp({
+// make the login screen available to be called on logout by exporting it as a function
+ export default () => Navigation.startSingleScreenApp({
   screen: {
     screen: "awesome-places.AuthScreen",
     title: "Login"
