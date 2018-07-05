@@ -26,7 +26,13 @@ export const addPlace = (placeName, location, image) => {
       alert("Something went wrong, please try again")
       dispatch(uiStopLoading())
     })
-    .then(res => res.json())
+    .then(res => {
+      if (res.ok) {
+        res.json();
+      } else {
+        throw(new Error());
+      }
+    })
     .then(parsedResponse => {
       const placeData = {
         name: placeName,
@@ -38,7 +44,14 @@ export const addPlace = (placeName, location, image) => {
         body: JSON.stringify(placeData)
       })
     })
-    .then(res  => res.json())
+    .then(res  => {
+      if (res.ok) {
+        res.json();
+      } else {
+        // forward to catch block
+        throw(new Error());
+      }
+    })
     .then(parsedRes => {
       console.log(parsedRes);
       dispatch(uiStopLoading());
@@ -73,7 +86,14 @@ export const getPlaces = () => {
     .catch(() => {
       alert("No valid token found")
     })
-    .then(res => res.json())
+    .then(res => {
+      if (res.ok) {
+        res.json();
+      } else {
+        // forward to catch block
+        throw(new Error());
+      }
+    })
     .then(parsedResponse => {
       const places = [];
       for (let key in parsedResponse) {
@@ -113,7 +133,14 @@ export const deletePlace = key => {
         method: "DELETE"
       })
     })
-    .then(res => res.json())
+    .then(res => {
+      if (res.ok) {
+        res.json();
+      } else {
+        // forward to catch block
+        throw(new Error());
+      }
+    })
     .then(parsedRes => {
       console.log("Done")
     })

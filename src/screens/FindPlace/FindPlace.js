@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native
 import { connect } from 'react-redux';
 
 import PlaceList from '../../components/PlaceList/PlaceList';
-import { getPlaces, stopRedirect } from '../../store/actions/index';
+import { getPlaces } from '../../store/actions/index';
 
 class FindPlace extends Component {
   static navigatorStyle = {
@@ -23,15 +23,11 @@ class FindPlace extends Component {
     }
   }
 
-  componentDidMount() {
-    this.props.onLoadPlaces();
-  }
-
   onNavigatorEvent = event => {
     // use navigator lifeCycle hooks
     if (event.type === "ScreenChangedEvent") {
       if(event.id === "willAppear") {
-        this.props.onStopRedirect()
+        this.props.onLoadPlaces();
       }
     }
     // listen to sidebar toggle
@@ -146,9 +142,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLoadPlaces: () => dispatch(getPlaces()),
-    onStopRedirect: () => dispatch(stopRedirect())
-
+    onLoadPlaces: () => dispatch(getPlaces())
   }
 }
 

@@ -67,6 +67,13 @@ class SharePlace extends Component {
   }
 
   onNavigatorEvent = event => {
+    // use navigator lifeCycle hooks
+    if (event.type === "ScreenChangedEvent") {
+      if(event.id === "willAppear") {
+        this.props.onStopRedirect();
+      }
+    }
+    // listen to sidebar toggle
     if (event.type === "NavBarButtonPress") {
       if (event.id === "sideDrawerToggle") {
         this.props.navigator.toggleDrawer({
@@ -204,7 +211,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddPlace: (placeName, location, image) => dispatch(addPlace(placeName, location, image))
+    onAddPlace: (placeName, location, image) => dispatch(addPlace(placeName, location, image)),
+    onStopRedirect: () => dispatch(stopRedirect())
   }
 }
 
