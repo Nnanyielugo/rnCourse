@@ -1,8 +1,9 @@
-import { SET_PLACES, DELETE_PLACE } from '../actions/actionTypes';
+import { SET_PLACES, DELETE_PLACE, REDIRECT_TO_FIND, STOP_REDIRECT } from '../actions/actionTypes';
 import PlaceImage from '../../assets/lion.jpg';
 
 const initialState = {
-  places: []
+  places: [],
+  redirect: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -18,6 +19,16 @@ const reducer = (state = initialState, action) => {
         places: state.places.filter(place => {
           return place.key !== action.payload;
         })
+      }
+    case REDIRECT_TO_FIND:
+      return {
+        ...state,
+        redirect: true
+      }
+    case STOP_REDIRECT:
+      return {
+        ...state,
+        redirect: false
       }
     default:
       return state;

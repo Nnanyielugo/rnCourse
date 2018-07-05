@@ -1,5 +1,7 @@
 export const SET_PLACES = 'SET_PLACES';
 export const DELETE_PLACE = 'DELETE_PLACE';
+export const REDIRECT_TO_FIND = 'REDIRECT_TO_FIND';
+export const STOP_REDIRECT = 'STOP_REDIRECT';
 
 export const TRY_AUTH = 'TRY_AUTH';
 export const AUTH_SET_TOKEN = 'AUTH_SET_TOKEN';

@@ -1,4 +1,4 @@
-import { ADD_PLACE, DELETE_PLACE, SET_PLACES } from './actionTypes';
+import { ADD_PLACE, DELETE_PLACE, SET_PLACES, PLACE_ADDED, REDIRECT_TO_FIND, STOP_REDIRECT } from './actionTypes';
 import { authGetToken, uiStartLoading, uiStopLoading } from './index';
 
 export const addPlace = (placeName, location, image) => {
@@ -41,13 +41,26 @@ export const addPlace = (placeName, location, image) => {
     .then(res  => res.json())
     .then(parsedRes => {
       console.log(parsedRes);
-      dispatch(uiStopLoading())
+      dispatch(uiStopLoading());
+      dispatch(redirectToFind());
     })
     .catch(err => {
       console.log(err);
       alert("Something went wrong, please try again")
       dispatch(uiStopLoading())
     });
+  }
+}
+
+export const redirectToFind = () => {
+  return {
+    type: REDIRECT_TO_FIND
+  }
+}
+
+export const stopRedirect = () => {
+  return {
+    type: STOP_REDIRECT
   }
 }
 

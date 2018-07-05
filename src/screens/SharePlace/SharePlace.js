@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 
-import { addPlace } from '../../store/actions/index';
+import { addPlace, stopRedirect } from '../../store/actions/index';
 import MainText from '../../components/UI/Text/MainText';
 import HeadingText from '../../components/UI/Text/HeadingText';
 import PlaceInput from '../../components/PlaceInput/PlaceInput';
@@ -28,7 +28,14 @@ class SharePlace extends Component {
     // execute the parent constructor
     super(props)
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent)
-    this.state = {
+  }
+
+  UNSAFE_componentWillMount() {
+    this.reset()
+  }
+
+  reset = () => {
+    this.setState({
       controls: {
         placeName: {
           value: "",
@@ -47,6 +54,15 @@ class SharePlace extends Component {
           valid: false
         }
       }
+    })
+  } 
+
+  componentDidUpdate() {
+    if (this.props.redirect){
+      this.props.navigator.switchToTab({tabIndex: 0});
+      // moved method to findPlace to take advantage of 
+      // navigator's lifecycle hooks
+      // this.props.onStopRedirect();
     }
   }
 
@@ -109,17 +125,10 @@ class SharePlace extends Component {
       this.state.controls.location.value,
       this.state.controls.image.value
     );
-    this.setState(prevState => {
-      return {
-        controls: {
-          ...prevState.controls,
-          placeName: {
-            ...prevState.controls.placeName,
-            value: ''
-          }
-        }
-      }
-    })    
+    this.reset();
+    // call the reset method in imagePicker using the reference created
+    this.imagePicker.reset();
+    this.locationPicker.reset()
   }
 
   render() {
@@ -143,8 +152,15 @@ class SharePlace extends Component {
           <MainText>
             <HeadingText>Share a place with us!</HeadingText>
           </MainText>
-          <PickImage onImagePicked={this.imagePickedHandler} />
-          <PickLocation onLocationPick={this.locationPickedHandler}  />
+          <PickImage 
+            onImagePicked={this.imagePickedHandler}
+            // create a reference to imagePicker
+            ref={ref => this.imagePicker = ref}
+          />
+          <PickLocation 
+            onLocationPick={this.locationPickedHandler}
+            ref={ref => this.locationPicker = ref}
+          />
           <PlaceInput 
             placeName={this.state.controls.placeName.value}
             onChangeText={this.placeChangedHandler}
@@ -181,7 +197,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    isLoading: state.ui.isLoading
+    isLoading: state.ui.isLoading,
+    redirect: state.places.redirect
   }
 }
 
